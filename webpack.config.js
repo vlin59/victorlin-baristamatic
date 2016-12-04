@@ -12,11 +12,7 @@ module.exports = {
     publicPath: '/static/'
   },
   plugins: [
-    new webpack.HotModuleReplacementPlugin(),
-    new ExtractTextPlugin({
-      filename: 'app.css',
-      allChunks: true,
-    }),
+    new webpack.HotModuleReplacementPlugin()
   ],
   module: {
     loaders: [{

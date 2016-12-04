@@ -139,7 +139,6 @@ export default class App extends Component {
   }
 
   checkInStockAfterOrder(stockedIngredients) {
-    console.log(stockedIngredients);
     let newMenuItemInStock = this.state.menuItemInStock
     let drinkRecipes = this.state.drinkRecipes;
     for (let drink in drinkRecipes){
@@ -174,7 +173,6 @@ export default class App extends Component {
   }
 
   render() {
-    console.log(this.state)
     return (
       <div>
         <Header handleClick={this.handleClick}/>
