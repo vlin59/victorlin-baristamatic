@@ -1,0 +1,12 @@
+.menu-item{
+  display: block;
+}
+
+.menu-item h5 {
+  display: inline-block;
+  *display: inline;
+  *zoom: 1;
+  margin-left: 3px;
+  margin-right: 3px;
+}
+

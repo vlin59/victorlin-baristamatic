@@ -1,24 +1,32 @@
-var webpack = require('webpack');
 var path = require('path');
+var webpack = require('webpack');
 
-var BUILD_DIR = path.resolve(__dirname, 'src/client/public');
-var APP_DIR = path.resolve(__dirname, 'src/client/app');
-
-var config = {
-  entry: APP_DIR + '/index.jsx',
+module.exports = {
+  entry: [
+    'webpack-hot-middleware/client',
+    './src/index'
+  ],
   output: {
-    path: BUILD_DIR,
-    filename: 'bundle.js'
+    path: path.join(__dirname, 'dist'),
+    filename: 'bundle.js',
+    publicPath: '/static/'
   },
-  module : {
-    loaders : [
-      {
-        test : /\.jsx?/,
-        include : APP_DIR,
-        loader : 'babel'
-      }
-    ]
+  plugins: [
+    new webpack.HotModuleReplacementPlugin(),
+    new ExtractTextPlugin({
+      filename: 'app.css',
+      allChunks: true,
+    }),
+  ],
+  module: {
+    loaders: [{
+      test: /\.js$/,
+      loaders: ['react-hot-loader', 'babel-loader'],
+      include: path.join(__dirname, 'src')
+    },
+    {
+      test: /\.css$/,
+      loader: 'style-loader!css-loader',
+    }]
   }
 };
-
-module.exports = config;
