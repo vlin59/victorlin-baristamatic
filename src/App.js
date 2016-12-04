@@ -115,7 +115,7 @@ export default class App extends Component {
     };
     this.handleClick = this.handleClick.bind(this);
     this.restock = this.restock.bind(this);
-    this.checkInStock = this.checkInStock.bind(this);
+    this.checkInStockAfterOrder = this.checkInStockAfterOrder.bind(this);
     this.orderDrink = this.orderDrink.bind(this);
     this.getPrice = this.getPrice.bind(this);
   }
@@ -138,8 +138,18 @@ export default class App extends Component {
     });
   }
 
-  checkInStock(menuItem) {
-
+  checkInStockAfterOrder(stockedIngredients) {
+    console.log(stockedIngredients);
+    let newMenuItemInStock = this.state.menuItemInStock
+    let drinkRecipes = this.state.drinkRecipes;
+    for (let drink in drinkRecipes){
+      for (let ingredient in drinkRecipes[drink]){
+        if ((stockedIngredients[ingredient] - drinkRecipes[drink][ingredient]) < 0){
+          newMenuItemInStock[drink] = false;
+        }
+      }
+    }
+    this.setState({menuItemInStock: newMenuItemInStock});
   }
 
   orderDrink (menuItem) {
@@ -149,6 +159,7 @@ export default class App extends Component {
     for (let drinkIngredient in drinkRecipes[menuItem]){
       newStockedIngredientUnits[drinkIngredient] = stockIngredientsUnits[drinkIngredient] - drinkRecipes[menuItem][drinkIngredient];
     }
+    this.checkInStockAfterOrder(newStockedIngredientUnits);
     this.setState({stockIngredientsUnits: newStockedIngredientUnits});
   }
 
@@ -171,7 +182,7 @@ export default class App extends Component {
         {Object.keys(this.state.menuItems).sort().map((menuItem, i) => {
           return(
             <div key={i+1} className="menu-item">
-              <h5>{i+1}</h5>
+              <h5>{(i+1)+'.'}</h5>
               <h5>{formatMenuItem(menuItem)}</h5>
               <h5>{this.getPrice(menuItem)}</h5>
               {this.state.menuItemInStock[menuItem] ? <h5>In Stock</h5> : <h5>Out of Stock</h5>}
@@ -180,10 +191,9 @@ export default class App extends Component {
           )
         })}
         {Object.keys(this.state.stockIngredientsUnits).sort().map((ingredient, i)=>{
-          console.log(ingredient)
           return (
             <div key={i+1}>
-              <h6>{ingredient +' '+ this.state.stockIngredientsUnits[ingredient]}</h6>
+              <h6>{ingredient +': '+ this.state.stockIngredientsUnits[ingredient]}</h6>
             </div>
           )
         })}
