@@ -3,16 +3,6 @@ import Header from './components/header.js'
 
 if (process.env.BROWSER || process.browser) { require('./App.css'); }
 
-
-let menu = [
-  'Coffee',
-  'Decaf Coffee',
-  'Caffe Latte',
-  'Caffe Americano',
-  'Caffe Mocha',
-  'Cappuccino',
-]
-
 let ingredients = {
   coffee  : 0.75  ,
   decafCoffee : 0.75,
@@ -73,7 +63,7 @@ export default class App extends Component {
         foamedMilk: 10,
         espresso: 10,
         cocoa: 10,
-        whippedCream: 0,
+        whippedCream: 10,
       },
       menuItems: {
         Coffee: 'Coffee',
@@ -127,21 +117,24 @@ export default class App extends Component {
     this.restock = this.restock.bind(this);
     this.checkInStock = this.checkInStock.bind(this);
     this.orderDrink = this.orderDrink.bind(this);
+    this.getPrice = this.getPrice.bind(this);
   }
 
   handleClick() {
-    menu.push('blah')
-    this.setState({});
     this.restock();
   }
 
   restock() {
     this.setState((state, props) => {
       let restockedIngredients = {};
-      for (let key in this.state.stockIngredientsUnits) {
-        restockedIngredients[key] = 10;
+      let menuItemRestocked = {};
+      for (let ingredient in this.state.stockIngredientsUnits) {
+        restockedIngredients[ingredient] = 10;
       }
-      return {stockIngredientsUnits: restockedIngredients};
+      for (let menuItem in this.state.menuItemInStock) {
+        menuItemRestocked[menuItem] = true;
+      }
+      return {stockIngredientsUnits: restockedIngredients, menuItemInStock : menuItemRestocked};
     });
   }
 
@@ -150,14 +143,27 @@ export default class App extends Component {
   }
 
   orderDrink (menuItem) {
-    console.log(menuItem);
+    let drinkRecipes = this.state.drinkRecipes;
+    let stockIngredientsUnits = this.state.stockIngredientsUnits;
+    let newStockedIngredientUnits = stockIngredientsUnits;
+    for (let drinkIngredient in drinkRecipes[menuItem]){
+      newStockedIngredientUnits[drinkIngredient] = stockIngredientsUnits[drinkIngredient] - drinkRecipes[menuItem][drinkIngredient];
+    }
+    this.setState({stockIngredientsUnits: newStockedIngredientUnits});
   }
 
-  checkPrice (menuItem) {
-
+  getPrice (menuItem) {
+    let drinkRecipes = this.state.drinkRecipes;
+    let value = 0;
+    for (let drinkIngredient in drinkRecipes[menuItem]){
+      value = value + (drinkRecipes[menuItem][drinkIngredient] * ingredients[drinkIngredient]);
+    }
+    let price = '$' + value.toFixed(2);
+    return price;
   }
 
   render() {
+    console.log(this.state)
     return (
       <div>
         <Header handleClick={this.handleClick}/>
@@ -167,8 +173,9 @@ export default class App extends Component {
             <div key={i+1} className="menu-item">
               <h5>{i+1}</h5>
               <h5>{formatMenuItem(menuItem)}</h5>
-              <h5>{this.state.menuItemInStock[menuItem] ? 'In Stock' : 'Out of Stock'}</h5>
-              <h5 onClick={() => this.orderDrink(menuItem)} name={menuItem}>Order</h5>
+              <h5>{this.getPrice(menuItem)}</h5>
+              {this.state.menuItemInStock[menuItem] ? <h5>In Stock</h5> : <h5>Out of Stock</h5>}
+              {this.state.menuItemInStock[menuItem] ? <h5 onClick={() => this.orderDrink(menuItem)}>Order</h5> : null}
             </div>
           )
         })}
