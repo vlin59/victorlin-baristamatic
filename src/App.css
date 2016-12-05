@@ -62,3 +62,11 @@ body {
   padding-top: 4px;
   padding-bottom: 4px;
 }
+
+.order-btn:active {
+  cursor: pointer;
+  background: #f1d7a3;
+  padding: 2 8 2 8 !important;
+  border: solid 1px #f1d7a3;
+  color:#d5b09d;
+}
