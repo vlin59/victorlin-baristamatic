@@ -1,4 +1,4 @@
-# victorlin-baristamatic
+# Barista-matic Programming Assignment
 
 
 ## Running
