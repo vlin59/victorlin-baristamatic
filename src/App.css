@@ -1,12 +1,34 @@
+body {
+  background: #864947;
+  color:#f1d7a3;
+  font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+}
+
+
+.header-text {
+  text-align: center;
+}
+
+.body-container {
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -ms-flex;
+  display: -o-flex;
+  display: flex;
+  margin-left: 30px;
+  justify-content: center;
+}
+
 .menu-item{
   display: block;
 }
 
 .menu-item h5 {
   display: inline-block;
-  *display: inline;
-  *zoom: 1;
-  margin-left: 3px;
-  margin-right: 3px;
+  margin-left: 5px;
+  margin-right: 5px;
 }
 
+.out-stock {
+  color: #27191d;
+}

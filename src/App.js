@@ -48,7 +48,14 @@ let drinkRecipes = {
 
 function formatMenuItem(menuItem) {
   return menuItem.split('_').join(' ');
+};
+
+function formatIngredientItem(ingredientItem) {
+  let firstLetterRegex = /(^|\s)[a-z]/g;
+  return ingredientItem.split(/(?=[A-Z])/).join(' ').replace(firstLetterRegex, (letter) => letter.toUpperCase());
 }
+
+
 
 export default class App extends Component {
   constructor(props) {
@@ -176,26 +183,32 @@ export default class App extends Component {
     return (
       <div>
         <Header handleClick={this.handleClick}/>
-        <h1>{this.state.count}</h1>
-        {Object.keys(this.state.menuItems).sort().map((menuItem, i) => {
-          return(
-            <div key={i+1} className="menu-item">
-              <h5>{(i+1)+'.'}</h5>
-              <h5>{formatMenuItem(menuItem)}</h5>
-              <h5>{this.getPrice(menuItem)}</h5>
-              {this.state.menuItemInStock[menuItem] ? <h5>In Stock</h5> : <h5>Out of Stock</h5>}
-              {this.state.menuItemInStock[menuItem] ? <h5 onClick={() => this.orderDrink(menuItem)}>Order</h5> : null}
-            </div>
-          )
-        })}
-        {Object.keys(this.state.stockIngredientsUnits).sort().map((ingredient, i)=>{
-          return (
-            <div key={i+1}>
-              <h6>{ingredient +': '+ this.state.stockIngredientsUnits[ingredient]}</h6>
-            </div>
-          )
-        })}
+        <div className="body-container">
+          <div className="ingredients-container">
+            <div>Ingredients</div>
+            {Object.keys(this.state.stockIngredientsUnits).sort().map((ingredient, i) => {
 
+              return (
+                <div key={i+1}>
+                  <h6>{formatIngredientItem(ingredient) +': '+ this.state.stockIngredientsUnits[ingredient]}</h6>
+                </div>
+              )
+            })}
+          </div>
+          <div className="menu-container">
+            <div>Menu</div>
+            {Object.keys(this.state.menuItems).sort().map((menuItem, i) => {
+              return(
+                <div key={i+1} className="menu-item">
+                  <h5 className="item-text">{(i+1)+'. ' + formatMenuItem(menuItem)}</h5>
+                  <h5 className="item-price">{this.getPrice(menuItem)}</h5>
+                  {this.state.menuItemInStock[menuItem] ? <h5 className="in-stock">In Stock</h5> : <h5 className="out-stock">Out of Stock</h5>}
+                  {this.state.menuItemInStock[menuItem] ? <h5 onClick={() => this.orderDrink(menuItem)} className="order-btn">Order</h5> : null}
+                </div>
+              )
+            })}
+          </div>
+        </div>
       </div>
     );
   }
