@@ -152,6 +152,7 @@ export default class App extends Component {
       for (let ingredient in drinkRecipes[drink]){
         if ((stockedIngredients[ingredient] - drinkRecipes[drink][ingredient]) < 0){
           newMenuItemInStock[drink] = false;
+          break;
         }
       }
     }
@@ -182,10 +183,11 @@ export default class App extends Component {
   render() {
     return (
       <div>
-        <Header handleClick={this.handleClick}/>
+        <Header/>
         <div className="body-container">
           <div className="ingredients-container">
             <div>Ingredients</div>
+            <div className="order-btn restock-btn" onClick={this.restock} >Restock Ingredients</div>
             {Object.keys(this.state.stockIngredientsUnits).sort().map((ingredient, i) => {
 
               return (

@@ -8,7 +8,7 @@ export default class Header extends Component {
   render() {
     return (
       <div>
-        <h1 className="header-text" onClick={this.props.handleClick}>Barista-matic</h1>
+        <h1 className="header-text">Barista-matic</h1>
       </div>
     );
   }
